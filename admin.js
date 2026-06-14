@@ -5,70 +5,99 @@ document.addEventListener('DOMContentLoaded', () => {
     const dashboardSection = document.getElementById('dashboardSection');
     const loginAlert = document.getElementById('loginAlert');
 
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
+    if(loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
 
-        // Autentikasi sederhana sesuai draf asli lu
-        if(user === 'admin' && pass === 'admin123') {
-            loginSection.classList.add('hidden');
-            dashboardSection.classList.remove('hidden');
-        } else {
-            loginAlert.innerText = "Username atau Password salah!";
-            loginAlert.classList.remove('hidden');
-        }
-    });
+            if(user === 'admin' && pass === 'admin123') {
+                loginSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+            } else {
+                loginAlert.innerText = "Username atau Password salah!";
+                loginAlert.classList.remove('hidden');
+            }
+        });
+    }
 
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-        loginSection.classList.remove('hidden');
-        dashboardSection.classList.add('hidden');
-        loginForm.reset();
-    });
+    const logoutBtn = document.getElementById('logoutBtn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            loginSection.classList.remove('hidden');
+            dashboardSection.classList.add('hidden');
+            loginForm.reset();
+        });
+    }
 
-    // --- LOGIKA KOMPUTASI (FETCH KE RENDER) ---
+    // --- LOGIKA KOMPUTASI & RENDER GRAFIK ---
     const prosesBtn = document.getElementById('prosesBtn');
     const statusText = document.getElementById('statusText');
 
-    prosesBtn.addEventListener('click', async () => {
-        prosesBtn.disabled = true;
-        prosesBtn.innerText = "Memproses (Bisa memakan waktu 10-30 detik)...";
-        statusText.innerText = "Menghubungi Server Render...";
+    if(prosesBtn) {
+        prosesBtn.addEventListener('click', async () => {
+            prosesBtn.disabled = true;
+            prosesBtn.innerText = "Memproses (Bisa memakan waktu 10-30 detik)...";
+            statusText.innerText = "Menghubungi Server Render...";
 
-        try {
-            // GANTI URL INI DENGAN URL RENDER LU (CONTOH: https://api-kepuasan-smkn1.onrender.com)
-            const RENDER_API_URL = 'https://backend-komputasi-pca.onrender.com/proses-klaster';
-            
-            const response = await fetch(`${RENDER_API_URL}?k=3`); // Nembak API Minta 3 Klaster
-            const data = await response.json();
-
-            if(data.status === "success") {
-                statusText.innerText = "✅ Komputasi Berhasil!";
+            try {
+                // GANTI INI DENGAN URL RENDER LU!
+                const RENDER_API_URL = 'https://backend-komputasi-pca.onrender.com/proses-klaster';
                 
-                // Update Kotak Metrik
-                document.getElementById('metricTotal').innerText = data.jumlah_responden_diproses;
-                document.getElementById('metricDimensi').innerText = data.dimensi_setelah_pca;
-                document.getElementById('metricVariansi').innerText = data.variansi_kumulatif + "%";
+                const response = await fetch(`${RENDER_API_URL}?k=3`); 
+                const data = await response.json();
 
-                // Karena kita butuh nampilin grafik 2D (PC1 vs PC2), nanti kita sesuaikan
-                // script Python di Render biar nge-return koordinatnya juga. 
-                // Untuk sekarang, kita buat animasi sukses dulu di Chart container.
-                document.getElementById('clusterChart').innerHTML = 
-                    `<h3 style="text-align:center; padding-top:150px; color:#34d399;">
-                    Data berhasil ditarik dan diproses!<br>
-                    ${data.jumlah_responden_diproses} siswa terbagi ke dalam 3 klaster.
-                    </h3>`;
-            } else {
-                statusText.innerText = `❌ Error: ${data.detail}`;
+                if(data.status === "success") {
+                    statusText.innerText = "✅ Komputasi Berhasil!";
+                    
+                    // Update Kotak Metrik
+                    document.getElementById('metricTotal').innerText = data.jumlah_responden_diproses;
+                    document.getElementById('metricDimensi').innerText = data.dimensi_setelah_pca;
+                    document.getElementById('metricVariansi').innerText = data.variansi_kumulatif + "%";
+
+                    // --- MENGGAMBAR GRAFIK PLOTLY ---
+                    const plotData = data.plot_data;
+                    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']; // Warna Klaster Neon
+                    
+                    const trace = {
+                        x: plotData.x,
+                        y: plotData.y,
+                        mode: 'markers',
+                        type: 'scatter',
+                        text: plotData.nama, // Nama siswa bakal muncul pas di-hover pakai mouse
+                        marker: {
+                            size: 14,
+                            color: plotData.cluster.map(c => colors[c % colors.length]),
+                            line: { width: 1.5, color: 'rgba(255,255,255,0.7)' },
+                            symbol: 'circle'
+                        }
+                    };
+
+                    const layout = {
+                        title: { text: 'Sebaran Klaster Kepuasan Siswa (Proyeksi 2D)', font: { color: 'white', size: 18 } },
+                        paper_bgcolor: 'rgba(0,0,0,0)', // Dibuat transparan biar kaca belakangnya tembus
+                        plot_bgcolor: 'rgba(0,0,0,0)',
+                        xaxis: { title: 'Komponen Utama 1', gridcolor: 'rgba(255,255,255,0.1)', tickfont: { color: 'white' } },
+                        yaxis: { title: 'Komponen Utama 2', gridcolor: 'rgba(255,255,255,0.1)', tickfont: { color: 'white' } },
+                        hovermode: 'closest',
+                        margin: { t: 60, l: 60, r: 30, b: 60 }
+                    };
+
+                    // Taruh grafik di dalam div ber-ID clusterChart
+                    Plotly.newPlot('clusterChart', [trace], layout, {responsive: true});
+
+                } else {
+                    statusText.innerText = `❌ Error: ${data.detail}`;
+                    statusText.style.color = "#ef4444";
+                }
+            } catch (error) {
+                statusText.innerText = "❌ Gagal menghubungi server. Pastikan Render sudah 'Live'.";
                 statusText.style.color = "#ef4444";
+                console.error(error);
+            } finally {
+                prosesBtn.disabled = false;
+                prosesBtn.innerText = "🚀 Proses Ulang Data";
             }
-        } catch (error) {
-            statusText.innerText = "❌ Gagal menghubungi server. Pastikan Render sudah 'Live'.";
-            statusText.style.color = "#ef4444";
-            console.error(error);
-        } finally {
-            prosesBtn.disabled = false;
-            prosesBtn.innerText = "🚀 Proses Ulang Data";
-        }
-    });
+        });
+    }
 });
