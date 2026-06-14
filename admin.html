@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Liquid Glass</title>
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+</head>
+<body>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="liquid-panel login-container" id="loginSection">
+        <h2>Akses Manajemen</h2>
+        <p>Silakan login untuk memproses data kuesioner.</p>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" class="liquid-btn">Masuk Dashboard</button>
+        </form>
+        <div id="loginAlert" class="alert hidden"></div>
+    </div>
+
+    <div class="liquid-panel dashboard-container hidden" id="dashboardSection">
+        <div class="header-glass">
+            <h2>Dashboard Analisis Kepuasan Siswa</h2>
+            <button id="logoutBtn" class="liquid-btn btn-small">Logout</button>
+        </div>
+        
+        <div class="control-panel">
+            <p>Sistem akan menarik data kuesioner dari Supabase dan mengirimkannya ke server Render untuk perhitungan PCA & K-Means.</p>
+            <button id="prosesBtn" class="liquid-btn btn-glow">🚀 Proses Data Sekarang</button>
+            <div id="statusText" class="status-text"></div>
+        </div>
+
+        <div class="metrics-grid">
+            <div class="liquid-card">
+                <h3>Total Responden</h3>
+                <p id="metricTotal">-</p>
+            </div>
+            <div class="liquid-card">
+                <h3>Dimensi PCA</h3>
+                <p id="metricDimensi">-</p>
+            </div>
+            <div class="liquid-card">
+                <h3>Variansi Kumulatif</h3>
+                <p id="metricVariansi">- %</p>
+            </div>
+        </div>
+
+        <div class="liquid-card chart-container">
+            <div id="clusterChart"></div>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
