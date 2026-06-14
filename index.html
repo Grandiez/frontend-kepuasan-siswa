@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Penilaian Kepuasan Siswa - SMKN 1 Dawuan</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <div class="glass-container main-wrapper">
+        <h1>Evaluasi Kepuasan SMKN 1 Dawuan</h1>
+        <p>Sistem Informasi Penilaian Kepuasan Siswa Dengan Menggunakan Principal Component Analysis (PCA) dan K-Means Clustering.</p>
+        
+        <form id="kuesionerForm">
+            <div class="glass-panel">
+                <h2>Data Diri Siswa</h2>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="nama" required>
+                </div>
+                <div class="form-group row">
+                    <div class="col">
+                        <label>Kelas</label>
+                        <select id="kelas" required>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label>Jurusan</label>
+                        <select id="jurusan" required>
+                            <option value="TKJT">TKJT</option>
+                            <option value="Busana">Busana</option>
+                            <option value="DKV">DKV</option>
+                            <option value="TO">TO</option>
+                            <option value="ATU">ATU</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Jenis Kelamin</label>
+                    <select id="jenis_kelamin" required>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="glass-panel">
+                <h2>1. Fasilitas Sekolah</h2>
+                <div class="slider-group">
+                    <label>Kelengkapan fasilitas lab/bengkel untuk praktik (P1)</label>
+                    <input type="range" id="p1" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p1">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Kondisi dan kelayakan peralatan belajar di kelas (P2)</label>
+                    <input type="range" id="p2" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p2">3</span>
+                </div>
+                </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Kirim Evaluasi (Sensus)</button>
+        </form>
+        <div id="alertBox" class="alert hidden"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
