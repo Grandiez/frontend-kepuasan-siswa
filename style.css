@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+body {
+    background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-color: rgba(10, 10, 15, 0.7); 
+    background-blend-mode: overlay;
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.main-wrapper {
+    width: 100%;
+    max-width: 800px;
+}
+
+/* WADAH UTAMA: KACA TEBAL HALUS */
+.glass-container, .glass-panel {
+    background: rgba(18, 18, 24, 0.45); 
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border-radius: 20px; 
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5); 
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+h1, h2 {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+    margin-top: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.row {
+    display: flex;
+    gap: 1rem;
+}
+
+.col {
+    flex: 1;
+}
+
+input[type="text"], select {
+    width: 100%;
+    padding: 12px;
+    background: rgba(5, 5, 10, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+/* SLIDER ALA KUBE.IO */
+.slider-group {
+    margin-bottom: 1.5rem;
+}
+
+input[type="range"] {
+    width: 90%;
+    accent-color: #3b82f6;
+    cursor: pointer;
+}
+
+.slider-val {
+    display: inline-block;
+    width: 8%;
+    text-align: right;
+    font-weight: bold;
+}
+
+/* TOMBOL */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(96, 165, 250, 0.2));
+    border: 1px solid rgba(96, 165, 250, 0.4);
+    border-radius: 12px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-btn:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+.hidden { display: none; }
+.alert { padding: 15px; border-radius: 10px; margin-top: 15px; text-align: center; font-weight: bold;}
+.alert.success { background: rgba(16, 185, 129, 0.2); border: 1px solid #10b981; }
+.alert.error { background: rgba(239, 68, 68, 0.2); border: 1px solid #ef4444; }
