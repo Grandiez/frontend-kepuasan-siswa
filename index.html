@@ -13,6 +13,7 @@
         <p>Sistem Informasi Penilaian Kepuasan Siswa Dengan Menggunakan Principal Component Analysis (PCA) dan K-Means Clustering.</p>
         
         <form id="kuesionerForm">
+            <!-- Data Diri -->
             <div class="glass-panel">
                 <h2>Data Diri Siswa</h2>
                 <div class="form-group">
@@ -48,6 +49,7 @@
                 </div>
             </div>
 
+            <!-- Dimensi 1: Fasilitas -->
             <div class="glass-panel">
                 <h2>1. Fasilitas Sekolah</h2>
                 <div class="slider-group">
@@ -60,7 +62,112 @@
                     <input type="range" id="p2" min="1" max="5" value="3">
                     <span class="slider-val" id="val-p2">3</span>
                 </div>
+                <div class="slider-group">
+                    <label>Kenyamanan dan keamanan area sekolah secara umum (P3)</label>
+                    <input type="range" id="p3" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p3">3</span>
                 </div>
+                <div class="slider-group">
+                    <label>Akses dan kebersihan fasilitas umum (Toilet, Kantin) (P4)</label>
+                    <input type="range" id="p4" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p4">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Dukungan fasilitas terhadap kelancaran belajar (P5)</label>
+                    <input type="range" id="p5" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p5">3</span>
+                </div>
+            </div>
+
+            <!-- Dimensi 2: Kurikulum -->
+            <div class="glass-panel">
+                <h2>2. Kurikulum dan Materi Pembelajaran</h2>
+                <div class="slider-group">
+                    <label>Kesesuaian materi dengan kebutuhan industri/dunia kerja (P6)</label>
+                    <input type="range" id="p6" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p6">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Tingkat kemudahan dalam memahami materi yang diajarkan (P7)</label>
+                    <input type="range" id="p7" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p7">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Kesesuaian kurikulum dengan minat dan bakat siswa (P8)</label>
+                    <input type="range" id="p8" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p8">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Variasi metode pembelajaran yang digunakan (P9)</label>
+                    <input type="range" id="p9" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p9">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Manfaat materi pelajaran untuk masa depan karir (P10)</label>
+                    <input type="range" id="p10" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p10">3</span>
+                </div>
+            </div>
+
+            <!-- Dimensi 3: Kinerja Guru -->
+            <div class="glass-panel">
+                <h2>3. Kinerja dan Kompetensi Guru</h2>
+                <div class="slider-group">
+                    <label>Penguasaan materi oleh guru saat mengajar di kelas (P11)</label>
+                    <input type="range" id="p11" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p11">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Kejelasan guru dalam menyampaikan penjelasan (P12)</label>
+                    <input type="range" id="p12" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p12">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Sikap keteladanan, kedisiplinan, dan etika guru (P13)</label>
+                    <input type="range" id="p13" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p13">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Kemudahan menghubungi guru saat mengalami kesulitan belajar (P14)</label>
+                    <input type="range" id="p14" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p14">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Ketepatan waktu guru dalam mengisi jam pelajaran (P15)</label>
+                    <input type="range" id="p15" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p15">3</span>
+                </div>
+            </div>
+
+            <!-- Dimensi 4: Lingkungan Sekolah -->
+            <div class="glass-panel">
+                <h2>4. Lingkungan Sekolah</h2>
+                <div class="slider-group">
+                    <label>Tingkat kebersihan lingkungan sekolah secara keseluruhan (P16)</label>
+                    <input type="range" id="p16" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p16">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Keamanan sekolah dari gangguan luar/ketertiban (P17)</label>
+                    <input type="range" id="p17" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p17">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Kondusivitas suasana di dalam kelas saat belajar (P18)</label>
+                    <input type="range" id="p18" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p18">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Keharmonisan hubungan antar sesama siswa dan warga sekolah (P19)</label>
+                    <input type="range" id="p19" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p19">3</span>
+                </div>
+                <div class="slider-group">
+                    <label>Penerapan budaya sopan santun (5S) di lingkungan sekolah (P20)</label>
+                    <input type="range" id="p20" min="1" max="5" value="3">
+                    <span class="slider-val" id="val-p20">3</span>
+                </div>
+            </div>
 
             <button type="submit" class="submit-btn" id="submitBtn">Kirim Evaluasi (Sensus)</button>
         </form>
