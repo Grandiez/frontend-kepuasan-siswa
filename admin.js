@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let payload = {
             "Timestamp": new Date().toLocaleString("id-ID"),
-            "Nama": document.getElementById('namaSiswa').value,
+            "Nama": document.getElementById('namaSiswa').value.trim(),
             "Kelas": document.getElementById('kelasSiswa').value,
             "Jurusan": document.getElementById('jurusanSiswa').value,
             "Jenis_Kelamin": document.getElementById('genderSiswa').value
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
             alertBox.classList.remove('hidden');
         } finally {
             btnSubmit.disabled = false;
-            btnSubmit.innerText = "Kirim Evaluasi ➔";
+            btnSubmit.innerText = "Kirim Komit Evaluasi ➔";
         }
     });
 
@@ -160,18 +160,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- PROSES OTENTIKASI SECARA ASINKRON ---
-    document.getElementById('btnSubmitLogin').addEventListener('click', () => {
-        if(document.getElementById('username').value === 'admin' && document.getElementById('password').value === 'admin123') {
-            loginSection.classList.add('hidden');
-            dashboardSection.classList.remove('hidden');
-            document.getElementById('loginAlert').classList.add('hidden');
-            document.getElementById('loginForm').reset();
-        } else {
-            document.getElementById('loginAlert').innerText = "❌ Akses ditolak. Kredensial tidak terdaftar.";
-            document.getElementById('loginAlert').classList.remove('hidden');
-        }
-    });
+    // --- PROSES OTENTIKASI (ANTI ERROR ENTER KEYBOARD) ---
+    const formLoginNode = document.getElementById('loginForm');
+    if(formLoginNode) {
+        formLoginNode.addEventListener('submit', (e) => {
+            e.preventDefault(); // Mencegah halaman reload saat tekan Enter
+            
+            // PENTING: Pakai .trim() agar spasi tidak sengaja dari HP terhapus otomatis
+            const userVal = document.getElementById('username').value.trim();
+            const passVal = document.getElementById('password').value.trim();
+
+            if(userVal === 'admin' && passVal === 'admin123') {
+                loginSection.classList.add('hidden');
+                dashboardSection.classList.remove('hidden');
+                document.getElementById('loginAlert').classList.add('hidden');
+                formLoginNode.reset();
+            } else {
+                document.getElementById('loginAlert').innerText = "❌ Akses ditolak. Username atau Password salah.";
+                document.getElementById('loginAlert').classList.remove('hidden');
+            }
+        });
+    }
 
     document.getElementById('logoutBtn').addEventListener('click', () => {
         loginSection.classList.remove('hidden');
@@ -194,44 +203,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const filKelas = document.getElementById('filterKelas');
     const filGender = document.getElementById('filterGender');
 
-    prosesBtn.addEventListener('click', async () => {
-        prosesBtn.disabled = true;
-        prosesBtn.innerText = "Mengeksekusi Machine Learning (Loading...)";
-        statusText.classList.remove('hidden');
-        statusText.innerText = "Menghubungi Klaster Render Core Engine...";
-        statusText.className = "alert"; 
+    if(prosesBtn) {
+        prosesBtn.addEventListener('click', async () => {
+            prosesBtn.disabled = true;
+            prosesBtn.innerText = "Mengeksekusi Machine Learning (Loading...)";
+            statusText.classList.remove('hidden');
+            statusText.innerText = "Menghubungi Klaster Render Core Engine...";
+            statusText.className = "alert"; 
 
-        try {
-            const RENDER_URL = 'https://backend-komputasi-pca.onrender.com/proses-klaster?k=3';
-            const response = await fetch(RENDER_URL);
-            const resData = await response.json();
+            try {
+                const RENDER_URL = 'https://backend-komputasi-pca.onrender.com/proses-klaster?k=3';
+                const response = await fetch(RENDER_URL);
+                const resData = await response.json();
 
-            if(resData.status === "success") {
-                globalData = resData.data_lengkap;
-                variansiServer = resData.variansi_kumulatif;
-                
-                statusText.innerText = `✅ Validasi sukses. Komputasi PCA & K-Means berhasil merangkum data responden.`;
-                statusText.classList.add('success');
-                panelDashboard.classList.remove('hidden');
+                if(resData.status === "success") {
+                    globalData = resData.data_lengkap;
+                    variansiServer = resData.variansi_kumulatif;
+                    
+                    statusText.innerText = `✅ Validasi sukses. Komputasi PCA & K-Means berhasil merangkum data responden.`;
+                    statusText.classList.add('success');
+                    panelDashboard.classList.remove('hidden');
 
-                isiDropdown(filJurusan, [...new Set(globalData.map(item => item.JURUSAN))]);
-                isiDropdown(filKelas, [...new Set(globalData.map(item => item.KELAS))]);
-                isiDropdown(filGender, [...new Set(globalData.map(item => item.JENIS_KELAMIN))]);
+                    isiDropdown(filJurusan, [...new Set(globalData.map(item => item.JURUSAN))]);
+                    isiDropdown(filKelas, [...new Set(globalData.map(item => item.KELAS))]);
+                    isiDropdown(filGender, [...new Set(globalData.map(item => item.JENIS_KELAMIN))]);
 
-                terapkanFilterDanRender();
-            } else {
-                throw new Error(resData.detail);
+                    terapkanFilterDanRender();
+                } else {
+                    throw new Error(resData.detail);
+                }
+            } catch (error) {
+                statusText.innerText = `❌ Error API: ${error.message}`;
+                statusText.classList.add('error');
+            } finally {
+                prosesBtn.disabled = false;
+                prosesBtn.innerText = "🚀 Tarik Ulang Data Server";
             }
-        } catch (error) {
-            statusText.innerText = `❌ Error API: ${error.message}`;
-            statusText.classList.add('error');
-        } finally {
-            prosesBtn.disabled = false;
-            prosesBtn.innerText = "🚀 Tarik Ulang Data Server";
-        }
-    });
+        });
+    }
 
-    [filJurusan, filKelas, filGender].forEach(el => el.addEventListener('change', terapkanFilterDanRender));
+    [filJurusan, filKelas, filGender].forEach(el => {
+        if(el) el.addEventListener('change', terapkanFilterDanRender);
+    });
 
     function isiDropdown(element, arrayData) {
         element.innerHTML = '<option value="ALL">Semua</option>';
@@ -360,56 +373,3 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const kamusSolusi = {
-            'P1': 'Inventarisasi lab dan ajukan pengadaan alat.', 'P2': 'Maintenance rutin peralatan.',
-            'P3': 'Tingkatkan keamanan sekolah.', 'P4': 'Perbaiki layout fasilitas publik.',
-            'P5': 'Evaluasi penggunaan lab.', 'P6': 'Undang praktisi dan sinkronisasi kurikulum.',
-            'P7': 'Sederhanakan modul pembelajaran.', 'P8': 'Perkuat program konseling.',
-            'P9': 'Pelatihan guru untuk metode interaktif.', 'P10': 'Seminar prospek karir.',
-            'P11': 'Sertakan guru dalam magang industri.', 'P12': 'Kumpulkan feedback metode mengajar.',
-            'P13': 'Tegakkan kode etik pengajar.', 'P14': 'Sediakan jam konsultasi siswa.',
-            'P15': 'Terapkan presensi ketat bagi pengajar.', 'P16': 'Galakkan program kebersihan.',
-            'P17': 'Tindak tegas pelanggaran ketertiban.', 'P18': 'Perbaiki fasilitas kelas.',
-            'P19': 'Adakan kegiatan kebersamaan.', 'P20': 'Kampanyekan budaya 5S.'
-        };
-
-        let htmlInvestigasi = '';
-        Object.keys(clusterMap).sort().forEach(c => {
-            const cm = clusterMap[c];
-            const avgF = cm.F/cm.count, avgK = cm.K/cm.count, avgG = cm.G/cm.count, avgL = cm.L/cm.count;
-            
-            const arrDims = [ {name: 'Fasilitas', val: avgF}, {name: 'Kurikulum', val: avgK}, {name: 'Guru', val: avgG}, {name: 'Lingkungan', val: avgL} ];
-            arrDims.sort((a,b) => a.val - b.val);
-            const dimTerburuk = arrDims[0];
-
-            let mapP = {}; let startP=0, endP=0;
-            if(dimTerburuk.name === 'Fasilitas') { startP=1; endP=5;}
-            else if(dimTerburuk.name === 'Kurikulum') { startP=6; endP=10;}
-            else if(dimTerburuk.name === 'Guru') { startP=11; endP=15;}
-            else { startP=16; endP=20;}
-
-            for(let i=startP; i<=endP; i++) {
-                let key = `P${i}`;
-                let totalP = cm.rawData.reduce((sum, d) => sum + d[key], 0);
-                mapP[key] = totalP / cm.count;
-            }
-
-            let pTerburuk = Object.keys(mapP).reduce((a, b) => mapP[a] < mapP[b] ? a : b);
-            let skorPTerburuk = mapP[pTerburuk];
-
-            let status = "Aman", icon = "✅", borderStyle = "#10b981";
-            if(skorPTerburuk < 2.0) { status = "Kritis"; icon = "🚨"; borderStyle = "#ef4444"; }
-            else if(skorPTerburuk < 3.0) { status = "Perlu Perbaikan"; icon = "⚠️"; borderStyle = "#f59e0b"; }
-            else if(skorPTerburuk < 4.0) { status = "Cukup Memuaskan"; icon = "ℹ️"; borderStyle = "#3b82f6"; }
-
-            htmlInvestigasi += `
-                <div style="margin-bottom: 15px; padding: 18px; border-radius:12px; background: rgba(5,5,10,0.4); border-left: 5px solid ${borderStyle}; text-align: left;">
-                    <h4 style="margin-top:0; color: ${borderStyle}; font-size: 15px;">${icon} Klaster ${c} — Indikator Terlemah: Dimensi ${dimTerburuk.name} (${status})</h4>
-                    <p style="margin: 6px 0; font-size: 13.5px;"><b>Akar Masalah Utama:</b> <i>"${kamusMasalah[pTerburuk]}"</i> (Skor Rata-Rata: ${skorPTerburuk.toFixed(2)} / 5.00)</p>
-                    <p style="margin: 6px 0; font-size: 13.5px; color: rgba(255,255,255,0.85);"><b>Rekomendasi Solusi:</b> ${kamusSolusi[pTerburuk]}</p>
-                </div>
-            `;
-        });
-        
-        document.getElementById('investigasiContainer').innerHTML = htmlInvestigasi;
-    }
-});
