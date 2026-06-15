@@ -3,19 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Kuesioner PCA</title>
+    <title>Sistem Kepuasan Siswa SMK N 1 Dawuan</title>
     <link rel="stylesheet" href="style.css">
+    <!-- WAJIB: Import Plotly -->
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
-    <style>
-        .dashboard-layout { display: flex; gap: 20px; }
-        .sidebar-filter { flex: 1; max-width: 250px; }
-        .main-content { flex: 3; }
-        .chart-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; margin-bottom: 20px; }
-        .filter-group { margin-bottom: 15px; }
-        .filter-group select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); }
-        .filter-group select option { color: black; }
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    </style>
 </head>
 <body>
     <!-- NAVIGASI MENU UTAMA -->
@@ -29,13 +20,14 @@
         <h2>📝 Evaluasi Layanan Sekolah</h2>
         <p>Silakan isi kuesioner evaluasi SMK N 1 Dawuan di bawah ini.</p>
         
-        <!-- Form Kuesioner Sederhana -->
         <form id="formKuesioner">
             <div class="form-group">
-                <input type="text" id="namaSiswa" placeholder="Nama Lengkap" required>
+                <label>Nama Lengkap</label>
+                <input type="text" id="namaSiswa" placeholder="Masukkan Nama Lengkap" required>
             </div>
             <div class="grid-2">
                 <div class="form-group">
+                    <label>Kelas</label>
                     <select id="kelasSiswa" required>
                         <option value="">Pilih Kelas...</option>
                         <option value="10">Kelas 10</option>
@@ -44,6 +36,7 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Jurusan</label>
                     <select id="jurusanSiswa" required>
                         <option value="">Pilih Jurusan...</option>
                         <option value="TKJT">TKJT</option>
@@ -54,7 +47,23 @@
                     </select>
                 </div>
             </div>
-            <button type="button" class="submit-btn" style="background: rgba(16, 185, 129, 0.4);">Mulai Isi Pertanyaan (P1-P20) ➔</button>
+            <div class="form-group">
+                <label>Jenis Kelamin</label>
+                <select id="genderSiswa" required>
+                    <option value="">Pilih Jenis Kelamin...</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                </select>
+            </div>
+
+            <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
+            <h3>Penilaian (Skala 1 - 5)</h3>
+            <p>1 = Sangat Tidak Puas, 5 = Sangat Puas</p>
+            
+            <div id="pertanyaanContainer"></div> <!-- Otomatis diisi oleh Javascript -->
+            
+            <button type="submit" class="submit-btn" id="btnSubmitKuesioner" style="background: rgba(16, 185, 129, 0.4); margin-top: 20px;">Kirim Evaluasi ➔</button>
+            <div id="kuesionerAlert" class="alert hidden" style="margin-top: 15px;"></div>
         </form>
     </div>
 
@@ -74,7 +83,7 @@
     </div>
 
     <!-- HALAMAN 3: DASHBOARD ADMIN -->
-    <div class="glass-container main-wrapper hidden" id="dashboardSection" style="max-width: 1200px;">
+    <div class="glass-container main-wrapper hidden" id="dashboardSection" style="max-width: 1200px; width: 95%;">
         <div class="header-dashboard">
             <h2>📊 Executive Dashboard</h2>
             <button id="logoutBtn" class="submit-btn btn-logout">Logout</button>
@@ -85,7 +94,6 @@
 
         <!-- PANEL DASHBOARD -->
         <div id="panelDashboard" class="dashboard-layout hidden">
-            <!-- SIDEBAR FILTER -->
             <div class="glass-panel sidebar-filter">
                 <h3>🎛️ Filter Data</h3>
                 <div class="filter-group"><label>Jurusan:</label><select id="filterJurusan"><option value="ALL">Semua</option></select></div>
@@ -93,7 +101,6 @@
                 <div class="filter-group"><label>Jenis Kelamin:</label><select id="filterGender"><option value="ALL">Semua</option></select></div>
             </div>
 
-            <!-- AREA UTAMA GRAFIK -->
             <div class="main-content">
                 <div class="glass-panel grid-2">
                     <div>
@@ -121,3 +128,4 @@
     </div>
     <script src="admin.js"></script>
 </body>
+</html>
