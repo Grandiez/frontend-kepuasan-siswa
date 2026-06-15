@@ -3,58 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Liquid Glass</title>
-    <link rel="stylesheet" href="admin.css">
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <title>Admin Dashboard - Kuesioner PCA</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+    <style>
+        .dashboard-layout { display: flex; gap: 20px; }
+        .sidebar-filter { flex: 1; max-width: 250px; }
+        .main-content { flex: 3; }
+        .chart-box { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+        .filter-group { margin-bottom: 15px; }
+        .filter-group select { width: 100%; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); }
+        .filter-group select option { color: black; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    </style>
 </head>
 <body>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
-
-    <div class="liquid-panel login-container" id="loginSection">
-        <h2>Akses Manajemen</h2>
-        <p>Silakan login untuk memproses data kuesioner.</p>
+    <div class="glass-container main-wrapper" id="loginSection">
+        <h2>🔒 Login Admin</h2>
         <form id="loginForm">
-            <input type="text" id="username" placeholder="Username" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" class="liquid-btn">Masuk Dashboard</button>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="submit-btn">Masuk Dashboard</button>
         </form>
-        <div id="loginAlert" class="alert hidden"></div>
+        <div id="loginAlert" class="alert error hidden"></div>
     </div>
 
-    <div class="liquid-panel dashboard-container hidden" id="dashboardSection">
-        <div class="header-glass">
-            <h2>Dashboard Analisis Kepuasan Siswa</h2>
-            <button id="logoutBtn" class="liquid-btn btn-small">Logout</button>
+    <div class="glass-container main-wrapper hidden" id="dashboardSection" style="max-width: 1200px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h2>📊 Executive Dashboard</h2>
+            <button id="logoutBtn" class="submit-btn" style="width: auto; padding: 10px 20px; background: rgba(239, 68, 68, 0.3);">Logout</button>
         </div>
         
-        <div class="control-panel">
-            <p>Sistem akan menarik data kuesioner dari Supabase dan mengirimkannya ke server Render untuk perhitungan PCA & K-Means.</p>
-            <button id="prosesBtn" class="liquid-btn btn-glow">🚀 Proses Data Sekarang</button>
-            <div id="statusText" class="status-text"></div>
-        </div>
+        <button id="prosesBtn" class="submit-btn" style="margin-bottom: 20px;">🚀 Tarik & Proses Data Server</button>
+        <div id="statusText" class="alert hidden" style="margin-bottom: 20px;"></div>
 
-        <div class="metrics-grid">
-            <div class="liquid-card">
-                <h3>Total Responden</h3>
-                <p id="metricTotal">-</p>
+        <div id="panelDashboard" class="dashboard-layout hidden">
+            
+            <div class="glass-panel sidebar-filter">
+                <h3>🎛️ Filter Data</h3>
+                <div class="filter-group">
+                    <label>Jurusan:</label>
+                    <select id="filterJurusan"><option value="ALL">Semua Jurusan</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>Kelas:</label>
+                    <select id="filterKelas"><option value="ALL">Semua Kelas</option></select>
+                </div>
+                <div class="filter-group">
+                    <label>Jenis Kelamin:</label>
+                    <select id="filterGender"><option value="ALL">Semua</option></select>
+                </div>
             </div>
-            <div class="liquid-card">
-                <h3>Dimensi PCA</h3>
-                <p id="metricDimensi">-</p>
-            </div>
-            <div class="liquid-card">
-                <h3>Variansi Kumulatif</h3>
-                <p id="metricVariansi">- %</p>
-            </div>
-        </div>
 
-        <div class="liquid-card chart-container">
-            <div id="clusterChart"></div>
+            <div class="main-content">
+                <div class="glass-panel grid-2">
+                    <div>
+                        <p style="margin:0; font-size: 14px; opacity: 0.8;">Total Responden Filtered</p>
+                        <h2 id="metricTotal" style="margin:0; color: #3b82f6;">0</h2>
+                    </div>
+                    <div>
+                        <p style="margin:0; font-size: 14px; opacity: 0.8;">Variansi Kumulatif PCA</p>
+                        <h2 id="metricVariansi" style="margin:0; color: #10b981;">0%</h2>
+                    </div>
+                </div>
+
+                <div class="glass-panel chart-box">
+                    <div id="scatter3DChart" style="width: 100%; height: 500px;"></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="glass-panel chart-box">
+                        <h3 style="text-align: center; margin-top:0;">Kinerja Global</h3>
+                        <div id="radarChart" style="width: 100%; height: 350px;"></div>
+                    </div>
+                    <div class="glass-panel chart-box">
+                        <h3 style="text-align: center; margin-top:0;">Proporsi Jurusan</h3>
+                        <div id="donutChart" style="width: 100%; height: 350px;"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel chart-box">
+                    <h3 style="text-align: center; margin-top:0;">Skor Rata-Rata Per Klaster</h3>
+                    <div id="barChart" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div class="glass-panel">
+                    <h2>📋 Bedah Investigasi Otomatis</h2>
+                    <div id="investigasiContainer"></div>
+                </div>
+            </div>
         </div>
     </div>
-
     <script src="admin.js"></script>
 </body>
 </html>
