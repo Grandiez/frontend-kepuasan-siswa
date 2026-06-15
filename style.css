@@ -12,7 +12,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex !important;
-    flex-direction: column !important; /* Susunan vertikal murni */
+    flex-direction: column !important;
     align-items: center;
     overflow-x: hidden;
     min-height: 100vh;
@@ -38,7 +38,7 @@ body {
     -webkit-backdrop-filter: blur(30px);
     border-radius: 20px;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    z-index: 99999 !important; /* Berdiri paling depan jalurnya bebas hambatan */
+    z-index: 99999 !important;
     position: relative;
 }
 
@@ -90,7 +90,6 @@ body {
     z-index: 10;
 }
 
-/* ARSITEKTUR LAYOUT DASHBOARD MANAGEMENT */
 .dashboard-layout { display: flex; gap: 20px; flex-direction: row; width: 100%; box-sizing: border-box;}
 .sidebar-filter { flex: 1; max-width: 260px; height: fit-content; position: relative; }
 .main-content { flex: 3; min-width: 0; }
@@ -108,6 +107,16 @@ p { font-size: 14px; opacity: 0.85; line-height: 1.5; }
 .metric-value { margin:5px 0 0 0; font-size: 2.2rem; font-weight: 600; }
 .metric-value.blue { color: #60a5fa; text-shadow: 0 0 15px rgba(59, 130, 246, 0.4); }
 .metric-value.green { color: #34d399; text-shadow: 0 0 15px rgba(16, 185, 129, 0.4); }
+
+/* --- ANTI AUTOFILL KUNING DARI HP --- */
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px rgba(25, 25, 35, 1) inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
 
 /* FIELD INPUT FORM */
 .form-group { margin-bottom: 18px; width: 100%; display: flex; flex-direction: column; }
