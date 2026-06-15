@@ -5,122 +5,142 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Kepuasan Siswa SMK N 1 Dawuan</title>
     <link rel="stylesheet" href="style.css">
-    <!-- WAJIB: Import Plotly -->
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
 </head>
 <body>
-    <!-- NAVIGASI MENU UTAMA -->
     <div class="glass-navbar">
-        <button id="navKuesioner" class="nav-btn active">📝 Isi Kuesioner</button>
-        <button id="navAdmin" class="nav-btn">📊 Admin Dashboard</button>
+        <button id="navKuesioner" type="button" class="nav-btn active">📝 Isi Kuesioner</button>
+        <button id="navAdmin" type="button" class="nav-btn">📊 Admin Dashboard</button>
     </div>
 
-    <!-- HALAMAN 1: KUESIONER SISWA -->
     <div id="kuesionerSection" class="glass-container main-wrapper">
         <h2>📝 Evaluasi Layanan Sekolah</h2>
-        <p>Silakan isi kuesioner evaluasi SMK N 1 Dawuan di bawah ini.</p>
+        <p>Silakan isi kuesioner evaluasi SMK N 1 Dawuan secara objektif.</p>
         
-        <form id="formKuesioner">
-            <div class="form-group">
-                <label>Nama Lengkap</label>
-                <input type="text" id="namaSiswa" placeholder="Masukkan Nama Lengkap" required>
-            </div>
-            <div class="grid-2">
+        <form id="formKuesioner" onsubmit="return false;">
+            <div id="partBiodata">
+                <h3 style="margin-top: 0; color: #3b82f6;">Langkah 1: Data Diri</h3>
                 <div class="form-group">
-                    <label>Kelas</label>
-                    <select id="kelasSiswa" required>
-                        <option value="">Pilih Kelas...</option>
-                        <option value="10">Kelas 10</option>
-                        <option value="11">Kelas 11</option>
-                        <option value="12">Kelas 12</option>
-                    </select>
+                    <label>Nama Lengkap</label>
+                    <input type="text" id="namaSiswa" placeholder="Masukkan Nama Lengkap Anda">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <select id="kelasSiswa">
+                            <option value="">Pilih Kelas...</option>
+                            <option value="10">Kelas 10</option>
+                            <option value="11">Kelas 11</option>
+                            <option value="12">Kelas 12</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Jurusan</label>
+                        <select id="jurusanSiswa">
+                            <option value="">Pilih Jurusan...</option>
+                            <option value="TKJT">TKJT</option>
+                            <option value="Busana">Busana</option>
+                            <option value="DKV">DKV</option>
+                            <option value="TO">TO</option>
+                            <option value="ATU">ATU</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>Jurusan</label>
-                    <select id="jurusanSiswa" required>
-                        <option value="">Pilih Jurusan...</option>
-                        <option value="TKJT">TKJT</option>
-                        <option value="Busana">Busana</option>
-                        <option value="DKV">DKV</option>
-                        <option value="TO">TO</option>
-                        <option value="ATU">ATU</option>
+                    <label>Jenis Kelamin</label>
+                    <select id="genderSiswa">
+                        <option value="">Pilih Jenis Kelamin...</option>
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>Jenis Kelamin</label>
-                <select id="genderSiswa" required>
-                    <option value="">Pilih Jenis Kelamin...</option>
-                    <option value="Laki-laki">Laki-laki</option>
-                    <option value="Perempuan">Perempuan</option>
-                </select>
+                <button type="button" id="btnKePertanyaan" class="submit-btn" style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(96, 165, 250, 0.4)); margin-top: 15px;">Lanjut ke Pertanyaan Evaluasi ➔</button>
+                <div id="biodataAlert" class="alert error hidden" style="margin-top: 15px;"></div>
             </div>
 
-            <hr style="border-color: rgba(255,255,255,0.1); margin: 20px 0;">
-            <h3>Penilaian (Skala 1 - 5)</h3>
-            <p>1 = Sangat Tidak Puas, 5 = Sangat Puas</p>
-            
-            <div id="pertanyaanContainer"></div> <!-- Otomatis diisi oleh Javascript -->
-            
-            <button type="submit" class="submit-btn" id="btnSubmitKuesioner" style="background: rgba(16, 185, 129, 0.4); margin-top: 20px;">Kirim Evaluasi ➔</button>
-            <div id="kuesionerAlert" class="alert hidden" style="margin-top: 15px;"></div>
+            <div id="partPertanyaan" class="hidden">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 id="haloSiswa" style="margin: 0; color: #10b981;">Halo, Siswa</h3>
+                    <button type="button" id="btnBackBiodata" style="background: transparent; border: none; color: #f59e0b; cursor: pointer; font-weight: 600;">⬅ Ubah Data Diri</button>
+                </div>
+                <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px;">Skala Penilaian: 1 (Sangat Tidak Puas) sampai 5 (Sangat Puas).</p>
+                
+                <div id="pertanyaanContainer"></div> 
+                
+                <button type="button" id="btnSubmitKuesioner" class="submit-btn" style="background: rgba(16, 185, 129, 0.5); margin-top: 20px; border-color: #10b981;">Kirim Komit Evaluasi ➔</button>
+                <div id="kuesionerAlert" class="alert hidden" style="margin-top: 15px;"></div>
+            </div>
         </form>
     </div>
 
-    <!-- HALAMAN 2: LOGIN ADMIN -->
     <div class="glass-container main-wrapper hidden" id="loginSection">
-        <h2>🔒 Login Admin</h2>
-        <form id="loginForm">
+        <h2>🔒 Akses Terbatas Manajemen</h2>
+        <p>Silakan masukkan kredensial untuk memverifikasi hak akses dashboard.</p>
+        <form id="loginForm" onsubmit="return false;">
             <div class="form-group">
-                <input type="text" id="username" placeholder="Username" required>
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Masukkan Username Admin">
             </div>
             <div class="form-group">
-                <input type="password" id="password" placeholder="Password" required>
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Masukkan Password Admin">
             </div>
-            <button type="submit" class="submit-btn">Masuk Dashboard</button>
+            <button type="button" id="btnSubmitLogin" class="submit-btn">Masuk Dashboard Admin</button>
         </form>
-        <div id="loginAlert" class="alert error hidden"></div>
+        <div id="loginAlert" class="alert error hidden" style="margin-top: 15px;"></div>
     </div>
 
-    <!-- HALAMAN 3: DASHBOARD ADMIN -->
     <div class="glass-container main-wrapper hidden" id="dashboardSection" style="max-width: 1200px; width: 95%;">
         <div class="header-dashboard">
-            <h2>📊 Executive Dashboard</h2>
-            <button id="logoutBtn" class="submit-btn btn-logout">Logout</button>
+            <h2>📊 Executive Analytics Dashboard</h2>
+            <button id="logoutBtn" type="button" class="submit-btn btn-logout">Logout System</button>
         </div>
         
-        <button id="prosesBtn" class="submit-btn" style="margin-bottom: 20px;">🚀 Tarik & Proses Data Server</button>
+        <button id="prosesBtn" type="button" class="submit-btn" style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(16, 185, 129, 0.3)); border-color: #60a5fa;">🚀 Eksekusi Algoritma K-Means & PCA (Realtime)</button>
         <div id="statusText" class="alert hidden" style="margin-bottom: 20px;"></div>
 
-        <!-- PANEL DASHBOARD -->
         <div id="panelDashboard" class="dashboard-layout hidden">
             <div class="glass-panel sidebar-filter">
-                <h3>🎛️ Filter Data</h3>
-                <div class="filter-group"><label>Jurusan:</label><select id="filterJurusan"><option value="ALL">Semua</option></select></div>
-                <div class="filter-group"><label>Kelas:</label><select id="filterKelas"><option value="ALL">Semua</option></select></div>
-                <div class="filter-group"><label>Jenis Kelamin:</label><select id="filterGender"><option value="ALL">Semua</option></select></div>
+                <h3>🎛️ Filter Responden</h3>
+                <div class="filter-group"><label>Jurusan</label><select id="filterJurusan"><option value="ALL">Semua</option></select></div>
+                <div class="filter-group"><label>Kelas</label><select id="filterKelas"><option value="ALL">Semua</option></select></div>
+                <div class="filter-group"><label>Jenis Kelamin</label><select id="filterGender"><option value="ALL">Semua</option></select></div>
             </div>
 
             <div class="main-content">
-                <div class="glass-panel grid-2">
+                <div class="glass-panel grid-2" style="padding: 20px; margin-bottom: 20px;">
                     <div>
-                        <p class="metric-title">Total Responden Filtered</p>
+                        <p class="metric-title">Total Responden Terfilter</p>
                         <h2 id="metricTotal" class="metric-value blue">0</h2>
                     </div>
                     <div>
-                        <p class="metric-title">Variansi Kumulatif PCA</p>
+                        <p class="metric-title">Variansi Kumulatif Kualitas Data (PCA)</p>
                         <h2 id="metricVariansi" class="metric-value green">0%</h2>
                     </div>
                 </div>
 
-                <div class="glass-panel chart-box"><div id="scatter3DChart" style="width: 100%; height: 500px;"></div></div>
-                <div class="grid-2">
-                    <div class="glass-panel chart-box"><h3 class="text-center">Kinerja Global</h3><div id="radarChart" style="width: 100%; height: 350px;"></div></div>
-                    <div class="glass-panel chart-box"><h3 class="text-center">Proporsi Jurusan</h3><div id="donutChart" style="width: 100%; height: 350px;"></div></div>
+                <div class="glass-panel chart-box">
+                    <div id="scatter3DChart" style="width: 100%; height: 500px;"></div>
                 </div>
-                <div class="glass-panel chart-box"><h3 class="text-center">Skor Rata-Rata Per Klaster</h3><div id="barChart" style="width: 100%; height: 400px;"></div></div>
+
+                <div class="grid-2">
+                    <div class="glass-panel chart-box">
+                        <h3 class="text-center" style="margin-top:0;">Matriks Radar Kinerja Global</h3>
+                        <div id="radarChart" style="width: 100%; height: 350px;"></div>
+                    </div>
+                    <div class="glass-panel chart-box">
+                        <h3 class="text-center" style="margin-top:0;">Proporsi Kepadatan Jurusan</h3>
+                        <div id="donutChart" style="width: 100%; height: 350px;"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel chart-box">
+                    <h3 class="text-center" style="margin-top:0;">Deviasi Skor Rata-Rata Makro Per Klaster</h3>
+                    <div id="barChart" style="width: 100%; height: 400px;"></div>
+                </div>
+
                 <div class="glass-panel">
-                    <h2>📋 Bedah Investigasi Otomatis</h2>
+                    <h2 style="margin-top: 0;">📋 Bedah Akar Masalah & Rekomendasi Otomatis</h2>
                     <div id="investigasiContainer"></div>
                 </div>
             </div>
