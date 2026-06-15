@@ -18,7 +18,48 @@
     </style>
 </head>
 <body>
-    <div class="glass-container main-wrapper" id="loginSection">
+    <!-- NAVIGASI MENU UTAMA -->
+    <div class="glass-navbar">
+        <button id="navKuesioner" class="nav-btn active">📝 Isi Kuesioner</button>
+        <button id="navAdmin" class="nav-btn">📊 Admin Dashboard</button>
+    </div>
+
+    <!-- HALAMAN 1: KUESIONER SISWA -->
+    <div id="kuesionerSection" class="glass-container main-wrapper">
+        <h2>📝 Evaluasi Layanan Sekolah</h2>
+        <p>Silakan isi kuesioner evaluasi SMK N 1 Dawuan di bawah ini.</p>
+        
+        <!-- Form Kuesioner Sederhana -->
+        <form id="formKuesioner">
+            <div class="form-group">
+                <input type="text" id="namaSiswa" placeholder="Nama Lengkap" required>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <select id="kelasSiswa" required>
+                        <option value="">Pilih Kelas...</option>
+                        <option value="10">Kelas 10</option>
+                        <option value="11">Kelas 11</option>
+                        <option value="12">Kelas 12</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="jurusanSiswa" required>
+                        <option value="">Pilih Jurusan...</option>
+                        <option value="TKJT">TKJT</option>
+                        <option value="Busana">Busana</option>
+                        <option value="DKV">DKV</option>
+                        <option value="TO">TO</option>
+                        <option value="ATU">ATU</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" class="submit-btn" style="background: rgba(16, 185, 129, 0.4);">Mulai Isi Pertanyaan (P1-P20) ➔</button>
+        </form>
+    </div>
+
+    <!-- HALAMAN 2: LOGIN ADMIN -->
+    <div class="glass-container main-wrapper hidden" id="loginSection">
         <h2>🔒 Login Admin</h2>
         <form id="loginForm">
             <div class="form-group">
@@ -32,65 +73,45 @@
         <div id="loginAlert" class="alert error hidden"></div>
     </div>
 
+    <!-- HALAMAN 3: DASHBOARD ADMIN -->
     <div class="glass-container main-wrapper hidden" id="dashboardSection" style="max-width: 1200px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="header-dashboard">
             <h2>📊 Executive Dashboard</h2>
-            <button id="logoutBtn" class="submit-btn" style="width: auto; padding: 10px 20px; background: rgba(239, 68, 68, 0.3);">Logout</button>
+            <button id="logoutBtn" class="submit-btn btn-logout">Logout</button>
         </div>
         
         <button id="prosesBtn" class="submit-btn" style="margin-bottom: 20px;">🚀 Tarik & Proses Data Server</button>
         <div id="statusText" class="alert hidden" style="margin-bottom: 20px;"></div>
 
+        <!-- PANEL DASHBOARD -->
         <div id="panelDashboard" class="dashboard-layout hidden">
-            
+            <!-- SIDEBAR FILTER -->
             <div class="glass-panel sidebar-filter">
                 <h3>🎛️ Filter Data</h3>
-                <div class="filter-group">
-                    <label>Jurusan:</label>
-                    <select id="filterJurusan"><option value="ALL">Semua Jurusan</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>Kelas:</label>
-                    <select id="filterKelas"><option value="ALL">Semua Kelas</option></select>
-                </div>
-                <div class="filter-group">
-                    <label>Jenis Kelamin:</label>
-                    <select id="filterGender"><option value="ALL">Semua</option></select>
-                </div>
+                <div class="filter-group"><label>Jurusan:</label><select id="filterJurusan"><option value="ALL">Semua</option></select></div>
+                <div class="filter-group"><label>Kelas:</label><select id="filterKelas"><option value="ALL">Semua</option></select></div>
+                <div class="filter-group"><label>Jenis Kelamin:</label><select id="filterGender"><option value="ALL">Semua</option></select></div>
             </div>
 
+            <!-- AREA UTAMA GRAFIK -->
             <div class="main-content">
                 <div class="glass-panel grid-2">
                     <div>
-                        <p style="margin:0; font-size: 14px; opacity: 0.8;">Total Responden Filtered</p>
-                        <h2 id="metricTotal" style="margin:0; color: #3b82f6;">0</h2>
+                        <p class="metric-title">Total Responden Filtered</p>
+                        <h2 id="metricTotal" class="metric-value blue">0</h2>
                     </div>
                     <div>
-                        <p style="margin:0; font-size: 14px; opacity: 0.8;">Variansi Kumulatif PCA</p>
-                        <h2 id="metricVariansi" style="margin:0; color: #10b981;">0%</h2>
+                        <p class="metric-title">Variansi Kumulatif PCA</p>
+                        <h2 id="metricVariansi" class="metric-value green">0%</h2>
                     </div>
                 </div>
 
-                <div class="glass-panel chart-box">
-                    <div id="scatter3DChart" style="width: 100%; height: 500px;"></div>
-                </div>
-
+                <div class="glass-panel chart-box"><div id="scatter3DChart" style="width: 100%; height: 500px;"></div></div>
                 <div class="grid-2">
-                    <div class="glass-panel chart-box">
-                        <h3 style="text-align: center; margin-top:0;">Kinerja Global</h3>
-                        <div id="radarChart" style="width: 100%; height: 350px;"></div>
-                    </div>
-                    <div class="glass-panel chart-box">
-                        <h3 style="text-align: center; margin-top:0;">Proporsi Jurusan</h3>
-                        <div id="donutChart" style="width: 100%; height: 350px;"></div>
-                    </div>
+                    <div class="glass-panel chart-box"><h3 class="text-center">Kinerja Global</h3><div id="radarChart" style="width: 100%; height: 350px;"></div></div>
+                    <div class="glass-panel chart-box"><h3 class="text-center">Proporsi Jurusan</h3><div id="donutChart" style="width: 100%; height: 350px;"></div></div>
                 </div>
-
-                <div class="glass-panel chart-box">
-                    <h3 style="text-align: center; margin-top:0;">Skor Rata-Rata Per Klaster</h3>
-                    <div id="barChart" style="width: 100%; height: 400px;"></div>
-                </div>
-
+                <div class="glass-panel chart-box"><h3 class="text-center">Skor Rata-Rata Per Klaster</h3><div id="barChart" style="width: 100%; height: 400px;"></div></div>
                 <div class="glass-panel">
                     <h2>📋 Bedah Investigasi Otomatis</h2>
                     <div id="investigasiContainer"></div>
@@ -100,4 +121,3 @@
     </div>
     <script src="admin.js"></script>
 </body>
-</html>
